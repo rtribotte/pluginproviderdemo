@@ -179,6 +179,9 @@ type: provider
 # The import path of your plugin.
 import: github.com/username/my-plugin
 
+# The base package name of your plugin
+basePkg: myplugin
+
 # A brief description of what your plugin is doing.
 summary: Description of what my plugin is doing
 
@@ -201,10 +204,26 @@ Properties include:
 - `import` (required): The import path of your plugin.
 - `summary` (required): A brief description of what your plugin is doing.
 - `testData` (required): Configuration data for your plugin. This is mandatory, and Traefik Pilot will try to execute the plugin with the data you provide as part of its startup validity tests.
+- `basePkg` (optional): The base package name of your plugin.
 - `iconPath` (optional): A local path in the repository to the icon of the project.
 - `bannerPath` (optional): A local path in the repository to the image that will be used when you will share your plugin page in social medias.
 
 There should also be a `go.mod` file at the root of your project. Traefik Pilot will use this file to validate the name of the project.
+
+### Plugin Package Name
+
+Traefik needs a package name to lookup and interpret the code of your plugin. Any misconfiguration leads to a startup failure.
+
+To do so, Traefik uses either the defined package in the manifest with the `basePkg` property or tries to use the import path to guess the package of your plugin.
+Guessing remains to use the Github project name as the base package name.
+
+#### Hyphen Characters In Github Project Name
+
+If the Github project name contains hyphens (`-`), Traefik will replace them for underscores (`_`) characters:
+
+`my-plugin` --> `my_plugin`
+
+In that case, please use the appropriate form for your package name in the code or use the `basePkg` property in the manifest to define a custom package.
 
 ### Tags and Dependencies
 
